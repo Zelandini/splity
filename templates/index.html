@@ -1,0 +1,382 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splitwise - Friends Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #5a67d8;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #5a67d8;
+            box-shadow: 0 4px 12px rgba(90,103,216,0.15);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #5a67d8, #667eea);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(90,103,216,0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e53e3e, #fc8181);
+            font-size: 0.9rem;
+            padding: 6px 12px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .people-list {
+            margin-top: 15px;
+        }
+
+        .person-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .expenses-list {
+            grid-column: 1 / -1;
+        }
+
+        .expense-item {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #5a67d8;
+        }
+
+        .expense-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .expense-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .expense-amount {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #38a169;
+        }
+
+        .expense-details {
+            color: #718096;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+
+        .participants {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .participant-tag {
+            background: #edf2f7;
+            color: #4a5568;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+        }
+
+        .balances {
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .balance-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .balance-item:last-child {
+            border-bottom: none;
+        }
+
+        .balance-positive {
+            color: #38a169;
+            font-weight: 600;
+        }
+
+        .balance-negative {
+            color: #e53e3e;
+            font-weight: 600;
+        }
+
+        .settlements {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fffaf0;
+            border-radius: 12px;
+            border: 2px solid #fed7d7;
+        }
+
+        .settlement-item {
+            padding: 8px 0;
+            font-weight: 500;
+            color: #744210;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #718096;
+            font-style: italic;
+            padding: 40px 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💸 Splitwise - Friends Edition</h1>
+            <p>Split expenses with your squad</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Add Person Card -->
+            <div class="card">
+                <h2>➕ Add Friend</h2>
+                <form method="POST" action="/add_person">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" placeholder="Enter friend's name" required>
+                    </div>
+                    <button type="submit" class="btn btn-submit">Add Friend</button>
+                </form>
+
+                <div class="people-list">
+                    <h3 style="margin: 15px 0 10px 0; color: #4a5568;">Friends ({{ people|length }})</h3>
+                    {% if people %}
+                        {% for person in people %}
+                        <div class="person-item">
+                            <span>{{ person }}</span>
+                            <a href="/remove_person/{{ person }}" class="btn btn-danger" 
+                               onclick="return confirm('Remove {{ person }}? This will delete all their expenses too.')">Remove</a>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-state">No friends added yet</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Add Expense Card -->
+            <div class="card">
+                <h2>💰 Add Expense</h2>
+                {% if people %}
+                <form method="POST" action="/add_expense">
+                    <div class="form-group">
+                        <label for="description">What was this for?</label>
+                        <input type="text" id="description" name="description" placeholder="Dinner, drinks, groceries..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Amount ($)</label>
+                        <input type="number" id="amount" name="amount" placeholder="0.00" step="0.01" min="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="paid_by">Who paid?</label>
+                        <select id="paid_by" name="paid_by" required>
+                            <option value="">Select person</option>
+                            {% for person in people %}
+                            <option value="{{ person }}">{{ person }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="participants">Split between (hold Ctrl/Cmd for multiple)</label>
+                        <select id="participants" name="participants" multiple required>
+                            {% for person in people %}
+                            <option value="{{ person }}">{{ person }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-submit">Add Expense</button>
+                </form>
+                {% else %}
+                <div class="empty-state">Add some friends first!</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Expenses List -->
+        <div class="card expenses-list">
+            <h2>📋 Recent Expenses ({{ expenses|length }})</h2>
+            {% if expenses %}
+                {% for expense in expenses %}
+                <div class="expense-item">
+                    <div class="expense-header">
+                        <div class="expense-title">{{ expense.description }}</div>
+                        <div class="expense-amount">${{ "%.2f"|format(expense.amount) }}</div>
+                    </div>
+                    <div class="expense-details">
+                        Paid by <strong>{{ expense.paid_by }}</strong> on {{ expense.date }}<br>
+                        Split between {{ expense.participants|length }} people 
+                        (${{ "%.2f"|format(expense.amount / expense.participants|length) }} each)
+                    </div>
+                    <div class="participants">
+                        {% for participant in expense.participants %}
+                        <span class="participant-tag">{{ participant }}</span>
+                        {% endfor %}
+                    </div>
+                    <a href="/delete_expense/{{ expense.id }}" class="btn btn-danger" 
+                       onclick="return confirm('Delete this expense?')">Delete</a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">No expenses yet</div>
+            {% endif %}
+        </div>
+
+        <!-- Balances and Settlements -->
+        <div class="balances">
+            <h2 style="color: #4a5568; margin-bottom: 15px;">💳 Who Owes What</h2>
+            {% if people %}
+                {% for person, balance in balances.items() %}
+                <div class="balance-item">
+                    <span><strong>{{ person }}</strong></span>
+                    <span class="{% if balance > 0.01 %}balance-positive{% elif balance < -0.01 %}balance-negative{% endif %}">
+                        {% if balance > 0.01 %}
+                            gets back ${{ "%.2f"|format(balance) }}
+                        {% elif balance < -0.01 %}
+                            owes ${{ "%.2f"|format(-balance) }}
+                        {% else %}
+                            settled up ✅
+                        {% endif %}
+                    </span>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">Add friends and expenses to see balances</div>
+            {% endif %}
+            
+            {% if settlements %}
+            <div class="settlements">
+                <h3 style="color: #744210; margin-bottom: 10px;">🔄 How to Settle Up</h3>
+                {% for settlement in settlements %}
+                <div class="settlement-item">
+                    <strong>{{ settlement.from }}</strong> pays <strong>{{ settlement.to }}</strong> 
+                    <span style="color: #38a169;">${{ "%.2f"|format(settlement.amount) }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% elif people %}
+            <div class="settlements">
+                <div style="color: #38a169; text-align: center;">Everyone is settled up! 🎉</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

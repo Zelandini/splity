@@ -1,4 +1,3 @@
-# app.py
 from __future__ import annotations
 import os
 from datetime import datetime
@@ -14,13 +13,16 @@ def create_app():
     app = Flask(__name__)
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret-key")
 
-    # DB URL normalization (Render sometimes gives postgres://)
-    db_url = os.getenv("DATABASE_URL", "").strip()
-    if db_url.startswith("postgres://"):
-        db_url = db_url.replace("postgres://", "postgresql://", 1)
-
-    # Fallback to SQLite for local dev if DATABASE_URL is not set
-    if not db_url:
+    # --- DB URL normalization ---
+    # Render / others may provide "postgres://"; SQLAlchemy w/ psycopg3 expects "postgresql+psycopg://"
+    db_url = (os.getenv("DATABASE_URL") or "").strip()
+    if db_url:
+        if db_url.startswith("postgres://"):
+            db_url = db_url.replace("postgres://", "postgresql+psycopg://", 1)
+        elif db_url.startswith("postgresql://"):
+            db_url = db_url.replace("postgresql://", "postgresql+psycopg://", 1)
+    else:
+        # Fallback for local dev when no DATABASE_URL is set
         db_url = "sqlite:///dev.db"
 
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url
@@ -64,9 +66,6 @@ def create_app():
         if not name:
             return redirect(url_for("index"))
 
-        # Optional normalization
-        # name = name.title()
-
         existing = Person.query.filter_by(name=name).first()
         if not existing:
             db.session.add(Person(name=name))
@@ -79,17 +78,10 @@ def create_app():
         if not p:
             return redirect(url_for("index"))
 
-        # Remove expenses where this person is payer or participant
-        # 1) Delete participant links (handled by ORM on delete via relationship)
-        # 2) Delete expenses paid by the person
-        # 3) For expenses they only participated in, remove them from that expense
-        #    If an expense ends up with zero participants, delete it.
-
         # Detach from expenses where they are a participant
         for e in list(p.participated_expenses):
             e.participants = [x for x in e.participants if x.id != p.id]
-            # If no participants left, delete expense
-            if not e.participants:
+            if not e.participants:  # if no participants left, delete expense
                 db.session.delete(e)
 
         # Delete expenses they paid
@@ -111,17 +103,14 @@ def create_app():
             return redirect(url_for("index"))
 
         try:
-            # keep two decimals, DB is Numeric(10,2)
-            amount = Decimal(amount_raw).quantize(Decimal("0.01"))
+            amount = Decimal(amount_raw).quantize(Decimal("0.01"))  # DB is Numeric(10,2)
         except Exception:
             return redirect(url_for("index"))
 
-        # ensure payer exists
         paid_by = Person.query.filter_by(name=paid_by_name).first()
         if not paid_by:
             return redirect(url_for("index"))
 
-        # filter participants to existing people
         participants = Person.query.filter(Person.name.in_(participants_names)).all()
         if not participants:
             return redirect(url_for("index"))

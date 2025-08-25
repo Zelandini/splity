@@ -24,7 +24,7 @@ def calculate_balances(people_names: list[str], expenses: list[dict]):
 
         n = len(participants)
         per = amount_cents // n
-        remainder = amount_cents - per * n
+        remainder = amount_cents - per * n  # distribute extra cents fairly
 
         for i, person in enumerate(participants):
             share = per + (1 if i < remainder else 0)
@@ -35,7 +35,7 @@ def calculate_balances(people_names: list[str], expenses: list[dict]):
 def calculate_settlements(balances: dict[str, float]):
     cents = {p: _to_cents(v) for p, v in balances.items()}
     creditors = [(p, a) for p, a in cents.items() if a > 1]
-    debtors = [(p, a) for p, a in cents.items() if a < -1]
+    debtors   = [(p, a) for p, a in cents.items() if a < -1]
 
     creditors.sort(key=lambda x: x[1], reverse=True)
     debtors.sort(key=lambda x: x[1])
@@ -61,6 +61,6 @@ def calculate_settlements(balances: dict[str, float]):
         else:        creditors[i] = (cp, ca)
 
         if da >= -1: j += 1
-        else:        debtors[j] = (dp, da)
+        else:        debtors[j]   = (dp, da)
 
     return settlements

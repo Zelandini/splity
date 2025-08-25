@@ -6,6 +6,7 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
+# Association table for many-to-many Expense <-> Person (participants)
 expense_participants = db.Table(
     "expense_participants",
     db.Column("expense_id", db.Integer, db.ForeignKey("expenses.id"), primary_key=True),
@@ -24,8 +25,7 @@ class Expense(db.Model):
     __tablename__ = "expenses"
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(255), nullable=False)
-    # Store as Numeric, do cents math in Python to avoid drift
-    amount = db.Column(Numeric(10, 2), nullable=False)
+    amount = db.Column(Numeric(10, 2), nullable=False)  # store as Numeric; do cents math in Python
     paid_by_id = db.Column(db.Integer, db.ForeignKey("people.id"), nullable=False)
     date = db.Column(db.String(32), nullable=False, default=lambda: datetime.now().strftime("%Y-%m-%d %H:%M"))
 
@@ -34,3 +34,9 @@ class Expense(db.Model):
 
     def __repr__(self) -> str:
         return f"<Expense {self.description} ${self.amount}>"
+
+# Tiny state table to signal clients that data changed (for lightweight realtime)
+class AppState(db.Model):
+    __tablename__ = "app_state"
+    id = db.Column(db.Integer, primary_key=True, default=1)
+    version = db.Column(db.Integer, nullable=False, default=1)

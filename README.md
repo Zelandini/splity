@@ -7,6 +7,8 @@ Auto-calculates balances and suggests minimal settlements to split bills with fr
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-2.0+-green.svg)](https://flask.palletsprojects.com/)
 
+
+
 ---
 
 ## 🛠️ Built With
@@ -35,12 +37,6 @@ Auto-calculates balances and suggests minimal settlements to split bills with fr
 - Smart settlement suggestions with minimal payments
 - Real-time updates across all devices
 - Responsive design for mobile and desktop
-
----
-
-## 📸 Screenshots
-
-_(Add your app screenshots here)_
 
 ---
 

@@ -13,8 +13,9 @@ So I created a free, self-hosted alternative that does everything we need withou
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-2.0+-green.svg)](https://flask.palletsprojects.com/)
 
-
-
+<img src="screenshots/first.png" alt="Splity Dashboard" width="400">
+<img src="screenshots/second.png" alt="Add Expense" width="400">
+<img src="screenshots/third.png" alt="Settlement View" width="400">
 ---
 
 ## 🛠️ Built With

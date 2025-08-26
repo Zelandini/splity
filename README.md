@@ -3,6 +3,12 @@
 Lightweight expense-splitting web app built with **Flask + PostgreSQL**.  
 Auto-calculates balances and suggests minimal settlements to split bills with friends.
 
+**Why I built this**: My friends and I were using Splitwise, but it limits free users to just a few expenses. 
+So I created a free, self-hosted alternative that does everything we need without restrictions. 
+
+
+### Designed primarily for mobile use - just share the link and everyone can add expenses on their phones.
+
 [![Live Demo](https://img.shields.io/badge/Live-Demo-success)](https://your-demo-url.onrender.com)
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-2.0+-green.svg)](https://flask.palletsprojects.com/)
